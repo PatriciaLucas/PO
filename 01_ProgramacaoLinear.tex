@@ -1,0 +1,443 @@
+\documentclass[t]{beamer}
+
+% Load general definitions
+\input{preamble.tex}
+
+% Specific definitions
+\title[]{Pesquisa Operacional}
+\subtitle[]{Programação Linear}
+\author[]{Patrícia Lucas\\{\footnotesize }}
+\institute{Bacharelado em Sistemas de Informação \\ IFNMG  - Campus Salinas}
+\date{\scriptsize Salinas\\Dezembro 2021}
+
+\begin{document}
+
+% cover page
+\setbeamertemplate{footline}{}
+\begin{frame}
+
+\begin{center}
+\includegraphics[width=.15\textwidth]{}
+\end{center}
+  \titlepage
+  \begin{tikzpicture}[remember picture,overlay]
+  \node[anchor=south east,xshift=-5pt,yshift=5pt] at (current page.south east) {\tiny Versão 1.2021};
+  \node[anchor=south west,yshift=0pt] at (current page.south west) {\includegraphics[width=.25\textwidth]{Logos/salinas_horizontal_jpg.jpg}};
+  \end{tikzpicture}  
+\end{frame}
+
+% Main slides
+%==================================
+
+
+\begin{ftst}{Visão geral}{Programação Linear}
+Um problema de PL é descrito por três componentes importantes:
+\small
+\begin{itemize}
+    \item Variáveis de decisão, que representam efetivamente a decisão que deve ser tomada no problema modelado.
+    \vone
+    \item Função objetivo, que representa em um valor numérico o benefício ou custo associado às decisões que devem ser tomadas. E a função que deve ser maximizada ou minimizada.
+    \item Restrições, que representam a limitação dos recursos do mundo real. As restrições impõem que a solução deve obedecer certas regras.
+\end{itemize}
+\vone
+\normalsize
+Em um problema de PL, a função objetivo e as restrições são sempre lineares e as variáveis
+de decisão são sempre variáveis reais (possivelmente dentro de um intervalo).
+
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Formalização}{Programação Linear}
+
+Uma programação linear (PL) é definida como um um problema de maximizar ou minimizar uma função linear (ou afim) sujeita a um número finito de restrições lineares. Considerando o exemplo:
+    \begin{equation*}
+        \begin{align*}
+          \text{max}\ \ 3x_1 + 2x_2 - x_3 + 5 & \\ 
+          \text{sujeito a} \ \ x_1 + x_2 \leqslant 9 & \\ 
+           x_3 \leq 3 & \\ 
+           x_1, x_2, x_3 \geq 0 & 
+        \end{align*}
+    \end{equation*}
+\vone
+\small
+Estamos maximizando a função objetivo $f(x_1,x_2,x_3) = 3x_1 + 2x_2 - x_3 + 5$ sujeito às restrições $x_1 + x_2 \leqslant 9$, $x_3 \leq 3$, $x_1 \geq 0$, $x_2 \geq 0$, $x_3 \geq 0$.
+
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Formalização}{Programação Linear}
+
+\textbf{Importante:} uma restrição linear é sempre uma inequação da forma:
+
+\begin{equation*}
+    f(x) \leq \beta, \ \ f(x) \geq \beta, \ \ f(x) = \beta
+\end{equation*}
+onde $x$ é um vetor de variáveis e $\beta$ é um escalar. Note que,
+\begin{equation*}
+    3x_1 + 5x_2 - x_3 + x_4 < 5
+\end{equation*}
+não é uma restrição linear, já que a desigualdade é estrita.
+\vone
+\small
+- Uma \textbf{solução} é uma atribuição de valores às variáveis ($x1$, $x2$, $x3$).
+\vone
+- Uma solução é \textbf{viável} se possui a propriedade de que todas as restrições são satisfeitas. 
+\vone
+- Uma solução é \textbf{ótima} se é viável e maximiza (ou minimiza se o problema for de minimização) a função objetivo.
+
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Modelagem: exemplo 1}{Programação Linear}
+\footnotesize
+Suponha uma empresa que produza 4 tipos de produto. A empresa possui duas máquinas diferentes e a produção de cada produto requer horas em ambas as máquinas, além de horas operacionais e horas em um processo de controle de qualidade. A tabela abaixo especifica, para cada produto, quantas horas são necessárias em cada máquina/atividade. A tabela inclui também o preço de venda (assuma demanda infinita):
+
+\begin{table}[]
+\centering
+\footnotesize
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Produto & Máquina 1 & Máquina 2 & Operacional & Qualidade & Preço de venda \\ \hline
+1       & 11        & 4         & 8           & 7         & 300            \\ \hline
+2       & 7         & 6         & 5           & 8         & 260            \\ \hline
+3       & 6         & 5         & 5           & 7         & 220            \\ \hline
+4       & 5         & 4         & 6           & 4         & 180            \\ \hline
+\end{tabular}
+\end{table}
+
+Por mês, a máquina 1 pode funcionar no máximo 700 horas, e a 2 por no máximo 500 horas. A empresa pode comprar no máximo 600 horas de trabalho operacional ao custo de 8 reais a hora, e 650 horas de controle de qualidade ao custo de 6 reais a hora. Quantos itens de cada produto a empresa deve produzir de forma a maximizar seu lucro?
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Modelagem: exemplo 2}{Programação Linear}
+\footnotesize
+Considere o seguinte problema de demanda, armazenamento e distribuição. Uma companhia local, Salinas Insumos, de revenda de insumos agrícolas prevê que nos próximos meses, a demanda por seu principal insumo seja a seguinte:
+
+\begin{table}[]
+\centering
+\footnotesize
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Mês               & 1    & 2    & 3    & 4    \\ \hline
+Demanda em litros & 5000 & 8000 & 9000 & 6000 \\ \hline
+\end{tabular}
+\end{table}
+
+No começo de cada mês, esta empresa pode comprar este insumo de um distribuidor regional pelos seguintes valores:
+
+\begin{table}[]
+\centering
+\footnotesize
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Mês              & 1    & 2    & 3    & 4    \\ \hline
+Custo por litros & 0.75 & 0.72 & 0.92 & 0.90 \\ \hline
+\end{tabular}
+\end{table}
+
+A Salinas Insumos possui um tanque de armazenamento de 4000 litros, que atualmente já contém 2000 litros. A empresa deseja saber quantos litros de insumo deve comprar no começo de cada mês para suprir a demanda e ao mesmo tempo minimizar seus custos. Note que se o insumo é comprado e revendido imediatamente, não é preciso armazená-lo no tanque. Somente o excedente para o mês seguinte é armazenado. Para simplificar, assumimos que o custo de armazenamento é zero. 
+\end{ftst}
+
+
+%==================================
+
+\begin{ftst}{Modelagem: exemplo 3}{Programação Linear}
+Considere a seguinte tabela nutricional de alguns tipos de comida:
+
+\begin{table}[]
+\footnotesize
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+Comida       & Preço & Calorias & Gordura & Proteína & Carboidratos \\ \hline
+Cenoura      & 0.14  & 23       & 0.1     & 0.6      & 6            \\ \hline
+Batata       & 0.12  & 171      & 0.2     & 3.7      & 30           \\ \hline
+Pão Integral & 0.20  & 65       & 0.0     & 2.2      & 13           \\ \hline
+Queijo       & 0.75  & 112      & 9.3     & 7.0      & 0            \\ \hline
+Amendoim     & 0.15  & 188      & 16.0    & 7.7      & 2            \\ \hline
+\end{tabular}
+\end{table}
+\small
+Uma nutricionista deseja montar um cardápio que minimize os custos diários, ao mesmo tempo que as seguintes demandas nutricionais são satisfeitas:
+\begin{itemize}
+    \item pelo menos 2000 calorias
+    \item pelo menos 50g de gordura
+    \item pelo menos 100g de proteína
+    \item pelo menos 250g de carboidratos
+\end{itemize}
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Forma padrão de igualdades}{Programação Linear}
+
+Até agora, trabalhamos com a forma canônica de formulação de um problema de PL. Porém, para resolver esse problemas, seja pelo método analítico, seja pelo algoritmo Simplex, a formulação do modelo deve estar na forma padrão de igualdades (FPI).
+\vone
+Há portanto três passos básicos a serem realizados para transformar uma PL para a FPI.
+\begin{itemize}
+    \item[(i)] Trocar min por max, se necessário.
+    \item[(ii)] Trocar todas as inequações por igualdades adicionando variáveis extras (sempre não negativas). Estas serão chamadas de \textbf{variáveis de folga}.
+    \item[(iii)] Trocar cada \textbf{variável livre} (que não tem restrição se sinal) por duas variáveis não-negativas.
+\end{itemize}
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Forma padrão de igualdades}{Programação Linear}
+\begin{itemize}
+    \item[(i)] Trocar min por max, se necessário.
+\end{itemize}
+\vone
+\centering $\text{min} \ x + y + z$
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.08]{Figuras/seta.png}
+\end{figure}
+
+\centering $\text{max} \ -x - y - z$
+
+\end{ftst}
+
+
+%==================================
+
+\begin{ftst}{Forma padrão de igualdades}{Programação Linear}
+\begin{itemize}
+    \item[(ii)] Trocar todas as inequações por igualdades adicionando variáveis extras (sempre não negativas). Estas serão chamadas de \textbf{variáveis de folga}. Com exceção das restrições de não-negatividade.
+\end{itemize}
+\vone
+\begin{minipage}{0.45\linewidth}
+        \centering $2x + 3y \leq 5$
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.05]{Figuras/seta.png}
+        \end{figure}
+        \centering $2x + 3y + w_1 = 5$
+        
+        \centering $w_1 \geq 0$
+\end{minipage}
+\hspace{0.05\linewidth}
+\begin{minipage}{0.45\linewidth}
+        \centering $8x - y + z \geq 10$
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.05]{Figuras/seta.png}
+        \end{figure}
+        \centering $8x - y + z - w_2 = 10$
+        
+        \centering $w_2 \geq 0$
+\end{minipage}
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Forma padrão de igualdades}{Programação Linear}
+\begin{itemize}
+    \item[(iii)] Trocar cada \textbf{variável livre} (que não tem restrição de sinal) por duas variáveis não-negativas.
+\end{itemize}
+\vone
+\begin{minipage}{0.35\linewidth}
+    \begin{align*}
+        \text{min} \ \ \ & x + y  \\ 
+        \text{sujeito a} \ \ \  & x - y \leq 2 \\
+        \text{} \ \ \ & x + y \geq -1 \\
+        \text{} \ \ \ & x \geq 0
+    \end{align*}
+\end{minipage}
+\hspace{0.02\linewidth}
+\begin{minipage}{0.1\linewidth}
+    \begin{figure}
+        \centering
+        \includegraphics[angle=90, scale=0.05]{Figuras/seta.png}
+    \end{figure}
+\end{minipage}
+\hspace{0.05\linewidth}
+\begin{minipage}{0.40\linewidth}
+    \begin{align*}
+        \text{min} \ \ \ & x + y^+ - y^-  \\ 
+        \text{sujeito a} \ \ \  & x - (y^+ - y^-) \leq 2 \\
+        \text{} \ \ \ & x + (y^+ - y^-) \geq -1 \\
+        \text{} \ \ \ & x, y^+, y^- \geq 0
+    \end{align*}
+\end{minipage}
+
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Forma padrão de igualdades}{Programação Linear}
+O problema FPI de programação linear também pode ser escrito de forma matricial:
+
+\begin{align*}
+\text{max} \ \ \ & \textbf{c}^T \textbf{x} \\ 
+\text{sujeito a} \ \ \ & \textbf{Ax} = \textbf{b} \\ 
+\text{} \ \ \ & \textbf{x} \geq \textbf{0}
+\end{align*}
+em que:
+\footnotesize
+\begin{equation*}
+\textbf{A} = \begin{bmatrix}
+a_{11} & a_{12} & \cdots  & a_{1n}\\ 
+a_{21} & a_{22} & \cdots  & a_{2n}\\ 
+\vdots & \vdots & \cdots  & \vdots\\ 
+a_{m1} & a_{m2} & \cdots  & a_{mn}\\ 
+\end{bmatrix}, 
+\textbf{x} = \begin{bmatrix}
+x_1 \\
+x_2 \\
+\vdots \\
+x_n
+\end{bmatrix},
+\textbf{b} = \begin{bmatrix}
+b_1 \\
+b_2 \\
+\vdots \\
+b_m
+\end{bmatrix},
+\textbf{c} = \begin{bmatrix}
+c_1 & c_2 $ \cdots & c_n
+\end{bmatrix},
+\textbf{0} = \begin{bmatrix}
+0 \\
+0 \\
+\vdots \\
+0
+\end{bmatrix}
+    
+\end{equation*}
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Forma padrão de igualdades}{Programação Linear}
+Vamos passar o modelo abaixo para a forma FPI:
+\vone
+    \begin{align*}
+        \text{min} \ \ \ & x + y  \\ 
+        \text{sujeito a} \ \ \  & x - y \leq 2 \\
+        \text{} \ \ \ & x + y \geq -1 \\
+        \text{} \ \ \ & x \geq 0
+    \end{align*}
+
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Forma padrão de igualdades}{Programação Linear}
+Agora vamos passar a FPI para a forma matricial:
+
+\begin{align*}
+        \text{max} \ \ \ & - x - (y^+ - y^-)  \\ 
+        \text{sujeito a} \ \ \  & x - (y^+ - y^-) + w_1 = 2 \\
+        \text{} \ \ \ & x + (y^+ - y^-) - w_2 = -1 \\
+        \text{} \ \ \ & x, w_1, w_2, y^+, y^- \geq 0
+\end{align*}
+
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Forma padrão de igualdades}{Programação Linear}
+Forma matricial:
+
+\begin{equation*}
+    \text{max} \ \ \begin{bmatrix}
+-1 & -1 & 1 & 0 & 0
+\end{bmatrix} \cdot \begin{bmatrix}
+x \\ 
+y^+\\ 
+y^-\\ 
+w_1\\ 
+w_2
+\end{bmatrix} 
+\end{equation*}
+
+\begin{equation*}
+\text{max} \ \ \begin{bmatrix}
+1 & -1 & 1 & 1 & 0 \\
+1 & 1 & -1 & 0 & -1 
+\end{bmatrix} \cdot \begin{bmatrix}
+x \\ 
+y^+\\ 
+y^-\\ 
+w_1\\ 
+w_2
+\end{bmatrix} = \begin{bmatrix}
+2\\ 
+-1
+\end{bmatrix}
+\end{equation*}
+
+\begin{equation*}
+    x, y^+, y^-, w_1, w_2 \geq 0
+\end{equation*}
+
+\end{ftst}
+
+
+%==================================
+
+\begin{ftst}{Modelagem: exemplo 4}{Programação Linear}
+Transforme o problema linear a seguir para a FPI e para a forma matricial:
+
+\begin{align*}
+        \text{min} \ \ z = \ \ \ & 3X_1 + 4X_2 - 5X_3 \\ 
+        \text{sujeito a} \ \ \  & 2X_1 + 2X_2 + 4X_3 \geq 320 \\
+        \text{} \ \ \ & 3X_1 + 4X_2 + 5X_3 \leq 580 \\
+        \text{} \ \ \ & X_1, X_2, X_3 \geq 0
+\end{align*}
+
+
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Modelagem: exemplo 5}{Programação Linear}
+Transforme o problema linear a seguir para a FPI e para a forma matricial:
+
+\begin{align*}
+        \text{max} \ \ z = \ \ \ & 5X_1 + 2X_2 - 4X_3 - X_4\\ 
+        \text{sujeito a} \ \ \  & X_1 + 2X_2 - X_4 \leq 12 \\
+        \text{} \ \ \ & 2X_1 + X_2 + 3X_3 \geq 6 \\
+        \text{} \ \ \ & X_1 \text{(\textit{livre})}, X_2, X_3, X_4 \geq 0
+\end{align*}
+
+
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Modelagem: exemplo 6}{Programação Linear}
+Transforme o problema do exemplo 3 para a FPI e para a forma matricial:
+
+\begin{align*}
+        \text{min} \ \ z = \ \ \ & 0.14X_1 + 0.12X_2 + 0.20X_3 + 0.75X_4 + 0.15X_5\\ 
+        \text{sujeito a} \ \ \  & 23X_1 + 171X_2 + 65X_3 + 112X_4 + 188X_5 \geq 2000 \\
+                  \text{} \ \ \ & 0.1X_1 + 0.2X_2 + 9.3X_4 + 16X_5 \geq 50 \\
+                  \text{} \ \ \ & 0.6X_1 + 3.7X_2 + 2.2X_3 + 7X_4 + 7.7X_5 \geq 100 \\
+                  \text{} \ \ \ & 6X_1 + 30X_2 + 13X_3 + 2X_5 \geq 250 \\
+                  \text{} \ \ \ & X_1, X_2, X_3, X_4 \geq 0
+\end{align*}
+\end{ftst}
+
+%==================================
+
+\begin{ftst}{Modelagem: exemplo 7}{Programação Linear}
+Transforme o problema do exemplo 2 para a FPI e para a forma matricial:
+
+\begin{align*}
+        \text{min} \ \ z = \ \ \ & 0.75X_1 + 0.72X_2 + 0.92X_3 + 0.90X_4 \\ 
+        \text{sujeito a} \ \ \  & X_1 + Y_1 - 500 = Y_2 \\
+                  \text{} \ \ \ & X_2 + Y_2 - 8000 = Y_3 \\
+                  \text{} \ \ \ & X_3 + Y_3 - 9000 = Y_4 \\
+                  \text{} \ \ \ & X_4 + Y_4 = 6000 \\
+                  \text{} \ \ \ & Y_1, Y_2, Y_3, Y_4 \leq 4000 \\
+                  \text{} \ \ \ & X_1, X_2, X_3, X_4, Y_1, Y_2, Y_3, Y_4 \geq 0
+\end{align*}
+\end{ftst}
+
+\end{document}
